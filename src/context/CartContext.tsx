@@ -13,6 +13,7 @@ interface CartContextData {
     alterarQuantidade: (produtoId: string, quantidade: number) => void;
     quantidadeTotal: number;
     valorTotal: number;
+    limparCarrinho: () => void;
 }
 
 const CartContext = createContext<CartContextData | undefined>(undefined);
@@ -79,6 +80,10 @@ export function CartProvider({ children }: CartProviderProps) {
         0
     );
 
+    function limparCarrinho() {
+        setItens([]);
+    }
+
     return (
         <CartContext.Provider
             value={{
@@ -86,6 +91,7 @@ export function CartProvider({ children }: CartProviderProps) {
                 adicionar,
                 remover,
                 alterarQuantidade,
+                limparCarrinho,
                 quantidadeTotal,
                 valorTotal
             }}

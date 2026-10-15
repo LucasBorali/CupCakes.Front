@@ -1,19 +1,34 @@
+
+import { useState } from "react";
 import { useCart } from "../context/CartContext";
 import { criarPedido } from "../services/pedidoService";
 
-export function Carrinho() {
+type Mensagem = {
+    tipo: "sucesso" | "erro";
+    texto: string;
+} | null;
 
+export function Carrinho() {
     const {
         itens,
         remover,
         alterarQuantidade,
+        limparCarrinho,
         valorTotal
     } = useCart();
 
+    const [carregando, setCarregando] = useState(false);
+    const [mensagem, setMensagem] = useState<Mensagem>(null);
+
     async function finalizarPedido() {
+        if (carregando || itens.length === 0) {
+            return;
+        }
+
+        setCarregando(true);
+        setMensagem(null);
 
         try {
-
             const pedido = {
                 itens: itens.map(item => ({
                     produtoId: item.produto.id,
@@ -23,114 +38,116 @@ export function Carrinho() {
 
             const resultado = await criarPedido(pedido);
 
-            alert(
-                `Pedido realizado com sucesso!\nPedido: ${resultado.pedidoId}`
-            );
+            limparCarrinho();
 
+            setMensagem({
+                tipo: "sucesso",
+                texto: `Pedido realizado com sucesso! Número: ${resultado.pedidoId}`
+            });
         } catch (error) {
+            console.error("Erro ao finalizar pedido:", error);
 
-            console.error(error);
-
-            alert(
-                "Não foi possível finalizar o pedido."
-            );
+            setMensagem({
+                tipo: "erro",
+                texto: "Não foi possível finalizar seu pedido. Verifique sua conexão e tente novamente."
+            });
+        } finally {
+            setCarregando(false);
         }
-    }
-
-    if (itens.length === 0) {
-        return (
-            <main>
-                <h1>Seu carrinho está vazio</h1>
-            </main>
-        );
     }
 
     return (
         <main>
-
             <h1>Seu carrinho</h1>
 
-            <div className="cart">
+            {mensagem && (
+                <div
+                    className={`mensagem mensagem-${mensagem.tipo}`}
+                    role={mensagem.tipo === "erro" ? "alert" : "status"}
+                >
+                    {mensagem.texto}
+                </div>
+            )}
 
-                {itens.map(item => (
+            {itens.length === 0 ? (
+                <p>Seu carrinho está vazio.</p>
+            ) : (
+                <div className="cart">
+                    {itens.map(item => (
+                        <div
+                            className="cart-item"
+                            key={item.produto.id}
+                        >
+                            <div>
+                                <h3>{item.produto.nome}</h3>
+                                <p>
+                                    R$ {item.produto.preco.toFixed(2)}
+                                </p>
+                            </div>
 
-                    <div
-                        className="cart-item"
-                        key={item.produto.id}
-                    >
+                            <div>
+                                <button
+                                    disabled={carregando}
+                                    onClick={() =>
+                                        alterarQuantidade(
+                                            item.produto.id,
+                                            item.quantidade - 1
+                                        )
+                                    }
+                                >
+                                    -
+                                </button>
 
-                        <div>
-                            <h3>{item.produto.nome}</h3>
+                                <span>{item.quantidade}</span>
 
-                            <p>
-                                R$ {item.produto.preco.toFixed(2)}
-                            </p>
-                        </div>
+                                <button
+                                    disabled={carregando}
+                                    onClick={() =>
+                                        alterarQuantidade(
+                                            item.produto.id,
+                                            item.quantidade + 1
+                                        )
+                                    }
+                                >
+                                    +
+                                </button>
+                            </div>
 
-                        <div>
+                            <strong>
+                                R${" "}
+                                {(
+                                    item.produto.preco *
+                                    item.quantidade
+                                ).toFixed(2)}
+                            </strong>
 
                             <button
+                                disabled={carregando}
                                 onClick={() =>
-                                    alterarQuantidade(
-                                        item.produto.id,
-                                        item.quantidade - 1
-                                    )
+                                    remover(item.produto.id)
                                 }
                             >
-                                -
+                                Remover
                             </button>
-
-                            <span>
-                                {item.quantidade}
-                            </span>
-
-                            <button
-                                onClick={() =>
-                                    alterarQuantidade(
-                                        item.produto.id,
-                                        item.quantidade + 1
-                                    )
-                                }
-                            >
-                                +
-                            </button>
-
                         </div>
+                    ))}
 
-                        <strong>
-                            R${" "}
-                            {(
-                                item.produto.preco *
-                                item.quantidade
-                            ).toFixed(2)}
-                        </strong>
+                    <div className="cart-total">
+                        <h2>
+                            Total: R$ {valorTotal.toFixed(2)}
+                        </h2>
 
                         <button
-                            onClick={() =>
-                                remover(item.produto.id)
-                            }
+                            onClick={finalizarPedido}
+                            disabled={carregando}
                         >
-                            Remover
+                            {carregando
+                                ? "Finalizando pedido..."
+                                : "Finalizar pedido"}
                         </button>
-
                     </div>
-
-                ))}
-
-                <div className="cart-total">
-
-                    <h2>
-                        Total: R$ {valorTotal.toFixed(2)}
-                    </h2>
-
-                    <button onClick={finalizarPedido}>
-                        Finalizar pedido
-                    </button>
-
                 </div>
-
-            </div>
-
+            )}
         </main>
     );
 }

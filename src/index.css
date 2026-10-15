@@ -76,36 +76,173 @@ h1 {
     opacity: .9;
 }
 
+/* =========================
+   Header - CupCake Gourmet
+   ========================= */
+
 .header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 1rem 2rem;
-    background: white;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    gap: 2rem;
+    padding: 1rem 2.5rem;
+    background: rgba(255, 255, 255, 0.96);
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+    border-bottom: 1px solid #ffe5ec;
 }
 
 .logo {
-    font-size: 1.3rem;
-    font-weight: bold;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.65rem;
     color: #333;
     text-decoration: none;
+    white-space: nowrap;
 }
 
-.header nav {
-    display: flex;
-    gap: 1.5rem;
+.logo-icon {
+    font-size: 1.8rem;
 }
 
-.header nav a {
-    color: #333;
-    text-decoration: none;
-    font-weight: 500;
+.logo-text {
+    font-size: 1.25rem;
+    letter-spacing: -0.4px;
 }
 
-.header nav a:hover {
+.logo-text strong {
     color: #ff7aa2;
 }
+
+.header-nav {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+}
+
+.nav-link,
+.login-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.7rem 0.9rem;
+    border-radius: 8px;
+    color: #555;
+    text-decoration: none;
+    font-size: 0.95rem;
+    font-weight: 600;
+    transition:
+        background 0.2s ease,
+        color 0.2s ease;
+}
+
+.nav-link:hover,
+.login-link:hover {
+    background: #fff0f4;
+    color: #e65380;
+}
+
+.nav-link.active,
+.login-link.active {
+    background: #fff0f4;
+    color: #e65380;
+}
+
+.cart-link-icon {
+    font-size: 1rem;
+}
+
+.cart-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 22px;
+    height: 22px;
+    padding: 0 5px;
+    border-radius: 999px;
+    background: #ff7aa2;
+    color: white;
+    font-size: 0.75rem;
+    font-weight: bold;
+}
+
+.header-user {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    margin-left: 0.5rem;
+    padding-left: 1rem;
+    border-left: 1px solid #eee;
+}
+
+.user-greeting {
+    max-width: 190px;
+    color: #777;
+    font-size: 0.9rem;
+    overflow-wrap: anywhere;
+}
+
+.user-greeting strong {
+    color: #333;
+}
+
+.logout-button {
+    padding: 0.65rem 0.9rem;
+    border: 1px solid #ffd0dd;
+    border-radius: 8px;
+    background: white;
+    color: #d94d76;
+    font-weight: bold;
+    cursor: pointer;
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease;
+}
+
+.logout-button:hover {
+    background: #fff0f4;
+    border-color: #ff7aa2;
+}
+
+/* =========================
+   Header responsivo
+   ========================= */
+
+@media (max-width: 700px) {
+    .header {
+        flex-direction: column;
+        gap: 0.8rem;
+        padding: 1rem;
+    }
+
+    .header-nav {
+        width: 100%;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 0.35rem;
+    }
+
+    .nav-link,
+    .login-link {
+        padding: 0.65rem;
+        font-size: 0.9rem;
+    }
+
+    .header-user {
+        justify-content: center;
+        margin-left: 0;
+        padding-left: 0;
+        border-left: none;
+    }
+
+    .user-greeting {
+        max-width: 150px;
+    }
+}
+
 
 .cart {
     display: flex;
@@ -238,4 +375,170 @@ h1 {
     .login-container {
         margin: 1rem;
     }
+}
+
+
+/* =========================
+   Mensagens de retorno
+   ========================= */
+
+.mensagem {
+    margin-bottom: 1.5rem;
+    padding: 1rem 1.25rem;
+    border-radius: 10px;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    overflow-wrap: anywhere;
+    animation: aparecer 0.2s ease-out;
+}
+
+.mensagem-sucesso {
+    color: #216e3a;
+    background: #eaf7ee;
+    border: 1px solid #b8e2c3;
+}
+
+.mensagem-erro {
+    color: #a12635;
+    background: #fff0f0;
+    border: 1px solid #f0b8be;
+}
+
+/* =========================
+   Botões desabilitados
+   ========================= */
+
+button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.cart-item button:disabled:hover,
+.cart-total button:disabled:hover {
+    opacity: 0.6;
+}
+
+/* =========================
+   Indicador de carregamento
+   ========================= */
+
+.cart-total button:disabled {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+}
+
+/* Animação das mensagens */
+
+@keyframes aparecer {
+    from {
+        opacity: 0;
+        transform: translateY(-5px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* =========================
+   Ajustes para telas pequenas
+   ========================= */
+
+@media (max-width: 600px) {
+    .mensagem {
+        padding: 0.85rem 1rem;
+        font-size: 0.9rem;
+    }
+}
+
+/* =========================
+   Spinner de carregamento
+   ========================= */
+
+.login-form button:disabled {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.65rem;
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+.spinner {
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(255, 255, 255, 0.45);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: girar 0.7s linear infinite;
+    flex-shrink: 0;
+}
+
+@keyframes girar {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+
+
+/* =========================
+   Estados da página inicial
+   ========================= */
+
+.estado-carregamento {
+    min-height: 220px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    color: #666;
+    text-align: center;
+}
+
+.spinner-rosa {
+    width: 32px;
+    height: 32px;
+    border: 3px solid #ffd6e2;
+    border-top-color: #ff7aa2;
+    border-radius: 50%;
+    animation: girar 0.7s linear infinite;
+}
+
+.estado-vazio {
+    padding: 3rem 1.5rem;
+    background: white;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+}
+
+.estado-vazio h2 {
+    margin-bottom: 0.75rem;
+    color: #444;
+}
+
+.estado-vazio p {
+    color: #666;
+    line-height: 1.5;
+}
+
+.botao-recarregar {
+    display: block;
+    margin: 1rem auto 0;
+    padding: 0.7rem 1rem;
+    border: none;
+    border-radius: 8px;
+    background: #ff7aa2;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.botao-recarregar:hover {
+    opacity: 0.9;
 }

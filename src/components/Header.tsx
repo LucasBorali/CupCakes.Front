@@ -1,47 +1,73 @@
-import { Link } from "react-router-dom";
+
+import { Link, NavLink } from "react-router-dom";
 import { useCart } from "../context/CartContext";
 import { useAuth } from "../context/AuthContext";
 
 export function Header() {
-
     const { quantidadeTotal } = useCart();
     const { usuario, logout } = useAuth();
 
     return (
         <header className="header">
-
-            <Link to="/" className="logo">
-                🧁 CupCake Gourmet
+            <Link to="/" className="logo" aria-label="CupCake Gourmet - Início">
+                <span className="logo-icon">🧁</span>
+                <span className="logo-text">
+                    CupCake <strong>Gourmet</strong>
+                </span>
             </Link>
 
-            <nav>
-
-                <Link to="/">
+            <nav className="header-nav" aria-label="Navegação principal">
+                <NavLink
+                    to="/"
+                    end
+                    className={({ isActive }) =>
+                        `nav-link ${isActive ? "active" : ""}`
+                    }
+                >
                     Início
-                </Link>
+                </NavLink>
 
-                <Link to="/carrinho">
-                    🛒 Carrinho ({quantidadeTotal})
-                </Link>
+                <NavLink
+                    to="/carrinho"
+                    className={({ isActive }) =>
+                        `nav-link ${isActive ? "active" : ""}`
+                    }
+                >
+                    <span className="cart-link-icon" aria-hidden="true">
+                        🛒
+                    </span>
+                    Carrinho
+                    <span className="cart-badge" aria-label={`${quantidadeTotal} itens`}>
+                        {quantidadeTotal}
+                    </span>
+                </NavLink>
 
-                {usuario ? (
-                    <>
-                        <span>
-                            Olá, {usuario.nome}
-                        </span>
+                <div className="header-user">
+                    {usuario ? (
+                        <>
+                            <span className="user-greeting">
+                                Olá, <strong>{usuario.nome}</strong>
+                            </span>
 
-                        <button onClick={logout}>
-                            Sair
-                        </button>
-                    </>
-                ) : (
-                    <Link to="/login">
-                        Entrar
-                    </Link>
-                )}
-
+                            <button
+                                className="logout-button"
+                                onClick={logout}
+                            >
+                                Sair
+                            </button>
+                        </>
+                    ) : (
+                        <NavLink
+                            to="/login"
+                            className={({ isActive }) =>
+                                `login-link ${isActive ? "active" : ""}`
+                            }
+                        >
+                            Entrar
+                        </NavLink>
+                    )}
+                </div>
             </nav>
-
         </header>
     );
 }
